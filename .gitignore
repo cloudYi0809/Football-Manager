@@ -1,0 +1,42 @@
+# macOS 系统文件
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# IDE 文件
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+*.swo
+*~
+
+# Android / Gradle 构建产物（后续开发阶段产生）
+build/
+.gradle/
+local.properties
+*.apk
+*.aab
+*.ap_
+*.dex
+captures/
+
+# Kotlin / Java 编译产物
+*.class
+*.jar
+*.war
+
+# 日志
+*.log
+logs/
+
+# 敏感配置（如有本地私密配置）
+*.local.json
+*.secret.json
+.env

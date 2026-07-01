@@ -1,0 +1,32 @@
+{
+  "scenario_id": "scenario_2002_03",
+  "name": "黄金年代 2002/03",
+  "start_date": "2002-07-01",
+  "season_label": "2002/03",
+  "description": "从罗纳尔多、齐达内、亨利、内斯塔、舍甫琴科、小罗的黄金年代开始，卡卡、C罗、鲁尼、梅西即将进入主线。",
+  "default_leagues": [
+    "EPL",
+    "LaLiga",
+    "SerieA",
+    "Bundesliga",
+    "Ligue1"
+  ],
+  "default_switches": {
+    "historical_transfers": true,
+    "historical_retirements": true,
+    "historical_prospects": true,
+    "historical_events": true
+  },
+  "key_prospects": [
+    "Kaka",
+    "Cristiano Ronaldo",
+    "Lionel Messi",
+    "Wayne Rooney"
+  ],
+  "key_events": [
+    "Chelsea takeover",
+    "Galacticos pressure",
+    "AC Milan aging curve",
+    "Arsenal invincible challenge"
+  ]
+}

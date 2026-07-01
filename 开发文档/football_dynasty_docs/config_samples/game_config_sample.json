@@ -1,0 +1,21 @@
+{
+  "game_name": "绿茵王朝：2002",
+  "database_version": "0.1.0",
+  "currency": "EUR",
+  "ability_scale": "1-100",
+  "default_mode": "free_rewrite",
+  "switches": {
+    "historical_transfers": true,
+    "historical_retirements": true,
+    "historical_prospects": true,
+    "historical_events": true,
+    "legend_rebirth": false,
+    "national_team": true
+  },
+  "simulation": {
+    "match_event_interval_minutes": 5,
+    "home_advantage_min": 0.03,
+    "home_advantage_max": 0.08,
+    "max_regular_xg": 4.5
+  }
+}
