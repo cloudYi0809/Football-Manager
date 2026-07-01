@@ -46,6 +46,8 @@ import com.greendynasty.football.data.save.entity.SaveWorldStateEntity
 import com.greendynasty.football.data.save.entity.ScoutAssignmentEntity
 import com.greendynasty.football.data.save.entity.ScoutReportEntity
 import com.greendynasty.football.data.save.entity.SeasonArchiveEntity
+import com.greendynasty.football.injury.model.MedicalFacilityDao
+import com.greendynasty.football.injury.model.MedicalFacilityEntity
 import java.io.File
 
 /**
@@ -80,9 +82,10 @@ import java.io.File
         CheckpointEntity::class,
         PerfLogEntity::class,
         SaveCupTieEntity::class,
-        SaveScheduleStateEntity::class
+        SaveScheduleStateEntity::class,
+        MedicalFacilityEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class SaveDatabase : RoomDatabase() {
@@ -106,6 +109,7 @@ abstract class SaveDatabase : RoomDatabase() {
     abstract fun perfLogDao(): PerfLogDao
     abstract fun saveCupTieDao(): SaveCupTieDao
     abstract fun saveScheduleStateDao(): SaveScheduleStateDao
+    abstract fun medicalFacilityDao(): MedicalFacilityDao
 
     companion object {
         /**
@@ -120,6 +124,9 @@ abstract class SaveDatabase : RoomDatabase() {
             return Room.databaseBuilder(context, SaveDatabase::class.java, dbFile.absolutePath)
                 .setJournalMode(androidx.room.RoomDatabase.JournalMode.WRITE_AHEAD_LOGGING) // WAL 提升并发写入性能
                 .fallbackToDestructiveMigrationOnDowngrade()
+                // T08 起 schema 演进（新增 save_medical_facility 表 + save_injury V0.2 字段）。
+                // 开发期允许升级时重建表；正式上线后需替换为显式 Migration。
+                .fallbackToDestructiveMigration()
                 .build()
         }
 

@@ -135,11 +135,18 @@ class ConditionTask(
  * 伤病恢复任务（V0.1 11 §二.1.4）
  *
  * 检查活跃范围俱乐部伤病球员是否到恢复日期。
+ *
+ * T08 集成：当注入 [injuryService] 时，玩家俱乐部使用 T08 完整恢复逻辑
+ * （6 因子恢复速度 + 永久影响 + 完全/部分恢复 + 强行复出复发判定）；
+ * 未注入时回退到 V0.1 简单日期判定逻辑。
+ *
+ * @param injuryService T08 伤病服务（可选，注入后启用完整恢复逻辑）
  */
 class InjuryRecoveryTask(
     private val databaseManager: DatabaseManager,
     private val activeScopeManager: ActiveScopeManager,
-    private val config: ProgressionConfig
+    private val config: ProgressionConfig,
+    private val injuryService: com.greendynasty.football.injury.repository.InjuryService? = null
 ) : DailyTask {
 
     override val name = "伤病恢复"
@@ -148,10 +155,43 @@ class InjuryRecoveryTask(
         val events = mutableListOf<AdvanceEvent>()
         val saveDb = databaseManager.getSaveDatabaseOrNull() ?: return@withContext emptyList()
 
-        // 查询全部活跃伤病
-        val activeInjuries = saveDb.saveInjuryDao().getAllActive(ctx.saveId)
+        // T08 完整恢复逻辑：玩家俱乐部使用 InjuryService 推进恢复
+        if (injuryService != null) {
+            val injuryEvents = injuryService.advanceDailyRecovery(
+                ctx.saveId, ctx.managerClubId, ctx.nextDate
+            )
+            for (evt in injuryEvents) {
+                events.add(
+                    AdvanceEvent(
+                        type = when (evt.eventType) {
+                            com.greendynasty.football.injury.model.InjuryEventType.RECOVERED ->
+                                AdvanceEventType.INJURY_RECOVERED
+                            com.greendynasty.football.injury.model.InjuryEventType.OCCURRED ->
+                                AdvanceEventType.INJURY_OCCURRED
+                            com.greendynasty.football.injury.model.InjuryEventType.RECURRED ->
+                                AdvanceEventType.INJURY_OCCURRED
+                            com.greendynasty.football.injury.model.InjuryEventType.PERMANENT_IMPACT ->
+                                AdvanceEventType.INJURY_OCCURRED
+                            com.greendynasty.football.injury.model.InjuryEventType.CAREER_RETIREMENT ->
+                                AdvanceEventType.RETIREMENT_ANNOUNCED
+                        },
+                        description = evt.description.ifEmpty {
+                            "球员 ${evt.playerId} 伤病事件：${evt.typeCode}"
+                        },
+                        clubId = ctx.managerClubId,
+                        playerId = evt.playerId,
+                        priority = EventPriority.MEDIUM
+                    )
+                )
+            }
+        }
 
+        // V0.1 简单逻辑：非玩家俱乐部仍按日期判定（活跃范围轻量模拟）
+        val activeInjuries = saveDb.saveInjuryDao().getAllActive(ctx.saveId)
         for (injury in activeInjuries) {
+            // 跳过玩家俱乐部伤病（已由 InjuryService 处理）
+            if (injuryService != null && injury.clubId == ctx.managerClubId) continue
+
             val expectedReturn = try {
                 LocalDate.parse(injury.expectedReturnDate)
             } catch (e: Exception) {

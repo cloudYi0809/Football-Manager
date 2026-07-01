@@ -47,6 +47,14 @@ interface SavePlayerStateDao {
     @Query("UPDATE save_player_state SET current_ca = :ca WHERE save_id = :saveId AND player_id = :playerId")
     suspend fun updateCa(saveId: Int, playerId: Int, ca: Int)
 
+    // T08：永久影响结算时更新潜力上限 PA（年轻球员重伤后 PA 下降）
+    @Query("UPDATE save_player_state SET current_pa = :pa WHERE save_id = :saveId AND player_id = :playerId")
+    suspend fun updatePa(saveId: Int, playerId: Int, pa: Int)
+
+    // T08：职业威胁伤触发退役评估时更新职业状态
+    @Query("UPDATE save_player_state SET career_status = :status WHERE save_id = :saveId AND player_id = :playerId")
+    suspend fun updateCareerStatus(saveId: Int, playerId: Int, status: String)
+
     @Query("UPDATE save_player_state SET morale = :morale WHERE save_id = :saveId AND player_id = :playerId")
     suspend fun updateMorale(saveId: Int, playerId: Int, morale: Int)
 

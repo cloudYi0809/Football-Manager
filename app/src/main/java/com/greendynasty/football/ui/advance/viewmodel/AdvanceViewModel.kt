@@ -87,14 +87,18 @@ class AdvanceViewModel(
     private val matchSimulator = MatchSimulator()
     private val teamSheetBuilder = TeamSheetBuilder(databaseManager)
     private val leagueTableUpdater = LeagueTableUpdater(databaseManager)
+    private val injuryService = com.greendynasty.football.injury.repository.InjuryService(databaseManager)
     private val matchDayExecutor = MatchDayExecutor(
-        databaseManager, matchSimulator, teamSheetBuilder, leagueTableUpdater, activeScopeManager
+        databaseManager, matchSimulator, teamSheetBuilder, leagueTableUpdater, activeScopeManager,
+        injuryService
     )
 
     // 13 项每日任务
     private val trainingTask = TrainingTask(databaseManager, activeScopeManager, config)
     private val conditionTask = ConditionTask(databaseManager, activeScopeManager, config)
-    private val injuryRecoveryTask = InjuryRecoveryTask(databaseManager, activeScopeManager, config)
+    private val injuryRecoveryTask = InjuryRecoveryTask(
+        databaseManager, activeScopeManager, config, injuryService
+    )
     private val moraleTask = MoraleTask(databaseManager, activeScopeManager, config)
     private val scoutTaskProgress = ScoutTaskProgress(databaseManager)
     private val youthGrowthTask = YouthGrowthTask(databaseManager)

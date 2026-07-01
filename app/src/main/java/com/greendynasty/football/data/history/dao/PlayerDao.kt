@@ -39,6 +39,10 @@ interface PlayerDao {
     @Query("SELECT * FROM player_attributes WHERE player_id = :playerId AND season_id = :seasonId")
     suspend fun getAttributes(playerId: Int, seasonId: Int): PlayerAttributesEntity?
 
+    // 查询某球员最新赛季属性（T08 伤病系统风险计算使用，取 season_id 最大的一条）
+    @Query("SELECT * FROM player_attributes WHERE player_id = :playerId ORDER BY season_id DESC LIMIT 1")
+    suspend fun getLatestAttributes(playerId: Int): PlayerAttributesEntity?
+
     // 查询某球员的全部赛季属性（按赛季排序）
     @Query("SELECT * FROM player_attributes WHERE player_id = :playerId ORDER BY season_id")
     fun getAllAttributes(playerId: Int): Flow<List<PlayerAttributesEntity>>

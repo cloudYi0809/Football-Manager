@@ -33,19 +33,22 @@ import kotlin.random.Random
  * - T02 MatchSimulator：完整比赛模拟
  * - T06 LeagueTableUpdater：积分榜增量更新
  * - T04/T05 TeamSheetBuilder：从存档构建出场名单
+ * - T08 InjuryService：比赛伤病判定（可选，注入后启用 7 因子概率公式）
  *
  * @param databaseManager 三库管理入口
  * @param matchSimulator T02 比赛模拟器
  * @param teamSheetBuilder 出场名单构建器
  * @param leagueTableUpdater 积分榜更新器
  * @param activeScopeManager 活跃范围管理器
+ * @param injuryService T08 伤病服务（可选，注入后启用完整伤病判定逻辑）
  */
 class MatchDayExecutor(
     private val databaseManager: DatabaseManager,
     private val matchSimulator: MatchSimulator,
     private val teamSheetBuilder: TeamSheetBuilder,
     private val leagueTableUpdater: LeagueTableUpdater,
-    private val activeScopeManager: ActiveScopeManager
+    private val activeScopeManager: ActiveScopeManager,
+    private val injuryService: com.greendynasty.football.injury.repository.InjuryService? = null
 ) {
 
     private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
@@ -313,12 +316,38 @@ class MatchDayExecutor(
     }
 
     /**
-     * 处理比赛中的伤病记录（V1 简化：直接从 MatchResult.injuries 写入 save_injury）
+     * 处理比赛中的伤病记录
+     *
+     * T08 集成：当注入 [injuryService] 时，对玩家俱乐部使用 7 因子概率公式
+     * 主动判定伤病（覆盖 MatchResult.injuries，因为 V1 MatchSimulator 不产生伤病）；
+     * 未注入时回退到 V0.1 逻辑（从 MatchResult.injuries 读取并直接写入）。
      */
     private suspend fun processMatchInjuries(ctx: AdvanceContext, clubId: Int, result: MatchResult) {
         val saveDb = databaseManager.getSaveDatabaseOrNull() ?: return
         val dateStr = dateFormatter.format(ctx.currentDate)
 
+        // T08 完整伤病判定：对玩家俱乐部健康球员主动评估伤病风险
+        val service = injuryService
+        if (service != null && clubId == ctx.managerClubId) {
+            val players = saveDb.savePlayerStateDao().getByClub(ctx.saveId, clubId)
+            val matchIntensity = (result.homeXg + result.awayXg).toInt().coerceIn(1, 10)
+            for (player in players) {
+                if (player.injuryStatus != "healthy") continue
+                val matchCtx = com.greendynasty.football.injury.model.MatchInjuryContext(
+                    matchId = result.matchId.toLongOrNull() ?: 0L,
+                    matchDate = ctx.currentDate,
+                    minute = (60 + (result.homeScore + result.awayScore) * 10).coerceIn(0, 90),
+                    matchIntensity = matchIntensity,
+                    eventType = com.greendynasty.football.injury.model.MatchEventType.NORMAL
+                )
+                runCatching {
+                    service.evaluateMatchInjury(ctx.saveId, player.playerId, matchCtx)
+                }
+            }
+            return
+        }
+
+        // V0.1 简化逻辑：直接从 MatchResult.injuries 写入 save_injury
         for (injury in result.injuries) {
             val playerId = injury.playerId.toIntOrNull() ?: continue
             val severityDays = injury.severityDays
