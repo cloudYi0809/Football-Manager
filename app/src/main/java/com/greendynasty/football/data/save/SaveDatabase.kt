@@ -11,12 +11,14 @@ import com.greendynasty.football.data.save.dao.ClubAiProfileDao
 import com.greendynasty.football.data.save.dao.EconomyIndexDao
 import com.greendynasty.football.data.save.dao.PerfLogDao
 import com.greendynasty.football.data.save.dao.SaveClubStateDao
+import com.greendynasty.football.data.save.dao.SaveCupTieDao
 import com.greendynasty.football.data.save.dao.SaveInjuryDao
 import com.greendynasty.football.data.save.dao.SaveLeagueTableDao
 import com.greendynasty.football.data.save.dao.SaveManifestDao
 import com.greendynasty.football.data.save.dao.SaveMatchDao
 import com.greendynasty.football.data.save.dao.SaveNewsDao
 import com.greendynasty.football.data.save.dao.SavePlayerStateDao
+import com.greendynasty.football.data.save.dao.SaveScheduleStateDao
 import com.greendynasty.football.data.save.dao.SaveTransferOfferDao
 import com.greendynasty.football.data.save.dao.SaveWorldStateDao
 import com.greendynasty.football.data.save.dao.ScoutAssignmentDao
@@ -31,12 +33,14 @@ import com.greendynasty.football.data.save.entity.EconomyIndexEntity
 import com.greendynasty.football.data.save.entity.LeagueEconomyProfileEntity
 import com.greendynasty.football.data.save.entity.PerfLogEntity
 import com.greendynasty.football.data.save.entity.SaveClubStateEntity
+import com.greendynasty.football.data.save.entity.SaveCupTieEntity
 import com.greendynasty.football.data.save.entity.SaveInjuryEntity
 import com.greendynasty.football.data.save.entity.SaveLeagueTableEntity
 import com.greendynasty.football.data.save.entity.SaveManifestEntity
 import com.greendynasty.football.data.save.entity.SaveMatchEntity
 import com.greendynasty.football.data.save.entity.SaveNewsEntity
 import com.greendynasty.football.data.save.entity.SavePlayerStateEntity
+import com.greendynasty.football.data.save.entity.SaveScheduleStateEntity
 import com.greendynasty.football.data.save.entity.SaveTransferOfferEntity
 import com.greendynasty.football.data.save.entity.SaveWorldStateEntity
 import com.greendynasty.football.data.save.entity.ScoutAssignmentEntity
@@ -74,7 +78,9 @@ import java.io.File
         LeagueEconomyProfileEntity::class,
         SeasonArchiveEntity::class,
         CheckpointEntity::class,
-        PerfLogEntity::class
+        PerfLogEntity::class,
+        SaveCupTieEntity::class,
+        SaveScheduleStateEntity::class
     ],
     version = 1,
     exportSchema = false
@@ -98,6 +104,8 @@ abstract class SaveDatabase : RoomDatabase() {
     abstract fun seasonArchiveDao(): SeasonArchiveDao
     abstract fun checkpointDao(): CheckpointDao
     abstract fun perfLogDao(): PerfLogDao
+    abstract fun saveCupTieDao(): SaveCupTieDao
+    abstract fun saveScheduleStateDao(): SaveScheduleStateDao
 
     companion object {
         /**
