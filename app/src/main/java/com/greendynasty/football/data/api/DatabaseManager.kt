@@ -27,7 +27,9 @@ import com.greendynasty.football.data.save.dao.PerfLogDao
 import com.greendynasty.football.data.save.dao.SaveClubStateDao
 import com.greendynasty.football.data.save.dao.SaveCupTieDao
 import com.greendynasty.football.data.save.dao.SaveInjuryDao
+import com.greendynasty.football.data.save.dao.SaveLeagueTableDao
 import com.greendynasty.football.data.save.dao.SaveManifestDao
+import com.greendynasty.football.data.save.dao.SaveMatchDao
 import com.greendynasty.football.data.save.dao.SaveNewsDao
 import com.greendynasty.football.data.save.dao.SavePlayerStateDao
 import com.greendynasty.football.data.save.dao.SaveScheduleStateDao
@@ -273,6 +275,8 @@ class DatabaseManager private constructor(private val context: Context) {
             PerfLogDao::class.java -> db.perfLogDao() as T
             SaveCupTieDao::class.java -> db.saveCupTieDao() as T
             SaveScheduleStateDao::class.java -> db.saveScheduleStateDao() as T
+            SaveMatchDao::class.java -> db.saveMatchDao() as T
+            SaveLeagueTableDao::class.java -> db.saveLeagueTableDao() as T
             else -> error("未知的 save DAO 类型: ${daoClass.name}")
         }
     }
@@ -327,6 +331,8 @@ class DatabaseManager private constructor(private val context: Context) {
     fun perfLogDao() = getSaveDatabase().perfLogDao()
     fun saveCupTieDao() = getSaveDatabase().saveCupTieDao()
     fun saveScheduleStateDao() = getSaveDatabase().saveScheduleStateDao()
+    fun saveMatchDao() = getSaveDatabase().saveMatchDao()
+    fun saveLeagueTableDao() = getSaveDatabase().saveLeagueTableDao()
 
     /** cache DAO 便捷访问 */
     fun playerSearchIndexDao() = getCacheDatabase().playerSearchIndexDao()
