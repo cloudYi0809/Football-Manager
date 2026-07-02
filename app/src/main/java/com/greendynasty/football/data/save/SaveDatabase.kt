@@ -82,6 +82,14 @@ import com.greendynasty.football.growth.model.MonthlyTrainingRecordDao
 import com.greendynasty.football.growth.model.MonthlyTrainingRecordEntity
 import com.greendynasty.football.injury.model.MedicalFacilityDao
 import com.greendynasty.football.injury.model.MedicalFacilityEntity
+import com.greendynasty.football.media.model.MediaInterviewAnswerDao
+import com.greendynasty.football.media.model.MediaInterviewAnswerEntity
+import com.greendynasty.football.media.model.MediaInterviewDao
+import com.greendynasty.football.media.model.MediaInterviewEntity
+import com.greendynasty.football.media.model.MediaNewsDao
+import com.greendynasty.football.media.model.MediaNewsEntity
+import com.greendynasty.football.media.model.MediaOpinionDao
+import com.greendynasty.football.media.model.MediaOpinionEntity
 import com.greendynasty.football.prospect.data.ProspectPathEventDao
 import com.greendynasty.football.prospect.data.ProspectPathEventEntity
 import com.greendynasty.football.prospect.data.ProspectStateDao
@@ -192,9 +200,14 @@ import java.io.File
         PlayerChemistryEntity::class,
         DressingRoomAtmosphereEntity::class,
         DressingRoomLeaderEntity::class,
-        PlayerEmotionEventEntity::class
+        PlayerEmotionEventEntity::class,
+        // T24 媒体模块：4 张表（媒体新闻 / 媒体舆论值 / 采访会话 / 采访回答历史）
+        MediaNewsEntity::class,
+        MediaOpinionEntity::class,
+        MediaInterviewEntity::class,
+        MediaInterviewAnswerEntity::class
     ],
-    version = 13, // T23 升版：新增更衣室模块 5 张表
+    version = 14, // T24 升版：新增媒体模块 4 张表
     exportSchema = false
 )
 abstract class SaveDatabase : RoomDatabase() {
@@ -262,6 +275,11 @@ abstract class SaveDatabase : RoomDatabase() {
     abstract fun dressingRoomAtmosphereDao(): DressingRoomAtmosphereDao
     abstract fun dressingRoomLeaderDao(): DressingRoomLeaderDao
     abstract fun playerEmotionEventDao(): PlayerEmotionEventDao
+    // T24 媒体模块 DAO
+    abstract fun mediaNewsDao(): MediaNewsDao
+    abstract fun mediaOpinionDao(): MediaOpinionDao
+    abstract fun mediaInterviewDao(): MediaInterviewDao
+    abstract fun mediaInterviewAnswerDao(): MediaInterviewAnswerDao
 
     companion object {
         /**

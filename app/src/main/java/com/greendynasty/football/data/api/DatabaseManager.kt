@@ -56,6 +56,10 @@ import com.greendynasty.football.growth.model.GrowthSnapshotDao
 import com.greendynasty.football.growth.model.MonthlyPlayingTimeDao
 import com.greendynasty.football.growth.model.MonthlyTrainingRecordDao
 import com.greendynasty.football.injury.model.MedicalFacilityDao
+import com.greendynasty.football.media.model.MediaInterviewAnswerDao
+import com.greendynasty.football.media.model.MediaInterviewDao
+import com.greendynasty.football.media.model.MediaNewsDao
+import com.greendynasty.football.media.model.MediaOpinionDao
 import com.greendynasty.football.prospect.data.ProspectPathEventDao
 import com.greendynasty.football.prospect.data.ProspectStateDao
 import com.greendynasty.football.scouting.data.SaveScoutEventDao
@@ -345,6 +349,10 @@ class DatabaseManager private constructor(private val context: Context) {
             DressingRoomAtmosphereDao::class.java -> db.dressingRoomAtmosphereDao() as T
             DressingRoomLeaderDao::class.java -> db.dressingRoomLeaderDao() as T
             PlayerEmotionEventDao::class.java -> db.playerEmotionEventDao() as T
+            MediaNewsDao::class.java -> db.mediaNewsDao() as T
+            MediaOpinionDao::class.java -> db.mediaOpinionDao() as T
+            MediaInterviewDao::class.java -> db.mediaInterviewDao() as T
+            MediaInterviewAnswerDao::class.java -> db.mediaInterviewAnswerDao() as T
             else -> error("未知的 save DAO 类型: ${daoClass.name}")
         }
     }
@@ -445,6 +453,11 @@ class DatabaseManager private constructor(private val context: Context) {
     fun dressingRoomAtmosphereDao() = getSaveDatabase().dressingRoomAtmosphereDao()
     fun dressingRoomLeaderDao() = getSaveDatabase().dressingRoomLeaderDao()
     fun playerEmotionEventDao() = getSaveDatabase().playerEmotionEventDao()
+    // T24 媒体模块 DAO 便捷访问
+    fun mediaNewsDao() = getSaveDatabase().mediaNewsDao()
+    fun mediaOpinionDao() = getSaveDatabase().mediaOpinionDao()
+    fun mediaInterviewDao() = getSaveDatabase().mediaInterviewDao()
+    fun mediaInterviewAnswerDao() = getSaveDatabase().mediaInterviewAnswerDao()
 
     /** cache DAO 便捷访问 */
     fun playerSearchIndexDao() = getCacheDatabase().playerSearchIndexDao()
