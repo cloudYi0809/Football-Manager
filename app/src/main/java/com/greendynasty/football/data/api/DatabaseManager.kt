@@ -19,6 +19,12 @@ import com.greendynasty.football.data.history.dao.SquadMembershipDao
 import com.greendynasty.football.data.history.dao.StaffDao
 import com.greendynasty.football.data.history.dao.TransferHistoryDao
 import com.greendynasty.football.data.save.SaveDatabase
+import com.greendynasty.football.board.model.BoardConfidenceDao
+import com.greendynasty.football.board.model.BoardEventDao
+import com.greendynasty.football.board.model.BoardSatisfactionDao
+import com.greendynasty.football.board.model.BudgetRequestDao
+import com.greendynasty.football.board.model.LongTermGoalDao
+import com.greendynasty.football.board.model.SeasonTargetDao
 import com.greendynasty.football.data.save.dao.ButterflyEventDao
 import com.greendynasty.football.data.save.dao.CheckpointDao
 import com.greendynasty.football.data.save.dao.ClubAiProfileDao
@@ -323,6 +329,12 @@ class DatabaseManager private constructor(private val context: Context) {
             YouthAcademyInvestmentDao::class.java -> db.youthAcademyInvestmentDao() as T
             CompressedMatchDao::class.java -> db.compressedMatchDao() as T
             DivergenceArchiveDao::class.java -> db.divergenceArchiveDao() as T
+            SeasonTargetDao::class.java -> db.seasonTargetDao() as T
+            LongTermGoalDao::class.java -> db.longTermGoalDao() as T
+            BoardSatisfactionDao::class.java -> db.boardSatisfactionDao() as T
+            BoardConfidenceDao::class.java -> db.boardConfidenceDao() as T
+            BudgetRequestDao::class.java -> db.budgetRequestDao() as T
+            BoardEventDao::class.java -> db.boardEventDao() as T
             else -> error("未知的 save DAO 类型: ${daoClass.name}")
         }
     }
@@ -410,6 +422,13 @@ class DatabaseManager private constructor(private val context: Context) {
     fun compressedMatchDao() = getSaveDatabase().compressedMatchDao()
     // T21 历史分歧归档 DAO 便捷访问
     fun divergenceArchiveDao() = getSaveDatabase().divergenceArchiveDao()
+    // T22 董事会模块 DAO 便捷访问
+    fun seasonTargetDao() = getSaveDatabase().seasonTargetDao()
+    fun longTermGoalDao() = getSaveDatabase().longTermGoalDao()
+    fun boardSatisfactionDao() = getSaveDatabase().boardSatisfactionDao()
+    fun boardConfidenceDao() = getSaveDatabase().boardConfidenceDao()
+    fun budgetRequestDao() = getSaveDatabase().budgetRequestDao()
+    fun boardEventDao() = getSaveDatabase().boardEventDao()
 
     /** cache DAO 便捷访问 */
     fun playerSearchIndexDao() = getCacheDatabase().playerSearchIndexDao()

@@ -5,6 +5,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabase.JournalMode
+import com.greendynasty.football.board.model.BoardConfidenceDao
+import com.greendynasty.football.board.model.BoardConfidenceEntity
+import com.greendynasty.football.board.model.BoardEventDao
+import com.greendynasty.football.board.model.BoardEventEntity
+import com.greendynasty.football.board.model.BoardSatisfactionDao
+import com.greendynasty.football.board.model.BoardSatisfactionEntity
+import com.greendynasty.football.board.model.BudgetRequestDao
+import com.greendynasty.football.board.model.BudgetRequestEntity
+import com.greendynasty.football.board.model.LongTermGoalDao
+import com.greendynasty.football.board.model.LongTermGoalEntity
+import com.greendynasty.football.board.model.SeasonTargetDao
+import com.greendynasty.football.board.model.SeasonTargetEntity
 import com.greendynasty.football.data.save.dao.ButterflyEventDao
 import com.greendynasty.football.data.save.dao.CheckpointDao
 import com.greendynasty.football.data.save.dao.ClubAiProfileDao
@@ -157,9 +169,16 @@ import java.io.File
         // T19 赛季归档：压缩比赛事件表
         CompressedMatchEntity::class,
         // T21 历史分歧归档表
-        DivergenceArchiveEntity::class
+        DivergenceArchiveEntity::class,
+        // T22 董事会模块：6 张表（赛季目标 / 长期目标 / 满意度快照 / 信心值 / 预算申请 / 董事会事件）
+        SeasonTargetEntity::class,
+        LongTermGoalEntity::class,
+        BoardSatisfactionEntity::class,
+        BoardConfidenceEntity::class,
+        BudgetRequestEntity::class,
+        BoardEventEntity::class
     ],
-    version = 11, // T21 升版：新增 divergence_archive 表（历史分歧归档）
+    version = 12, // T22 升版：新增董事会模块 6 张表
     exportSchema = false
 )
 abstract class SaveDatabase : RoomDatabase() {
@@ -214,6 +233,13 @@ abstract class SaveDatabase : RoomDatabase() {
     abstract fun compressedMatchDao(): CompressedMatchDao
     // T21 历史分歧归档 DAO
     abstract fun divergenceArchiveDao(): DivergenceArchiveDao
+    // T22 董事会模块 DAO
+    abstract fun seasonTargetDao(): SeasonTargetDao
+    abstract fun longTermGoalDao(): LongTermGoalDao
+    abstract fun boardSatisfactionDao(): BoardSatisfactionDao
+    abstract fun boardConfidenceDao(): BoardConfidenceDao
+    abstract fun budgetRequestDao(): BudgetRequestDao
+    abstract fun boardEventDao(): BoardEventDao
 
     companion object {
         /**
