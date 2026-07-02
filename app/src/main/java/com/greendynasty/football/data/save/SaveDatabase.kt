@@ -151,7 +151,7 @@ import java.io.File
         YouthEventEntity::class,
         YouthAcademyInvestmentEntity::class
     ],
-    version = 8,
+    version = 9, // T18 升版：club_ai_profile 表新增 club_personality / long_term_goal / target_seasons / player_archetype / transfer_budget_ratio / youth_investment_ratio 字段
     exportSchema = false
 )
 abstract class SaveDatabase : RoomDatabase() {

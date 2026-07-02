@@ -46,4 +46,30 @@ interface ClubAiProfileDao {
 
     @Query("SELECT COUNT(*) FROM club_ai_profile")
     suspend fun count(): Int
+
+    // ===== T18 扩展查询接口 =====
+
+    /** 观察全部画像（按 ambition 降序，Flow 驱动 UI） */
+    @Query("SELECT * FROM club_ai_profile ORDER BY ambition DESC")
+    fun observeAll(): kotlinx.coroutines.flow.Flow<List<ClubAiProfileEntity>>
+
+    /** 按性格查询画像列表（T18 6 种性格筛选） */
+    @Query("SELECT * FROM club_ai_profile WHERE club_personality = :personality ORDER BY ambition DESC")
+    suspend fun getByPersonality(personality: String): List<ClubAiProfileEntity>
+
+    /** 按战术风格查询画像列表（T18 8 种战术筛选） */
+    @Query("SELECT * FROM club_ai_profile WHERE tactical_identity = :tacticalIdentity")
+    suspend fun getByTacticalIdentity(tacticalIdentity: String): List<ClubAiProfileEntity>
+
+    /** 按长期目标查询画像列表 */
+    @Query("SELECT * FROM club_ai_profile WHERE long_term_goal = :goal")
+    suspend fun getByLongTermGoal(goal: String): List<ClubAiProfileEntity>
+
+    /** 批量插入或更新（T18 画像生成器初始化用） */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAll(profiles: List<ClubAiProfileEntity>)
+
+    /** 删除所有画像（重置用） */
+    @Query("DELETE FROM club_ai_profile")
+    suspend fun clearAll()
 }

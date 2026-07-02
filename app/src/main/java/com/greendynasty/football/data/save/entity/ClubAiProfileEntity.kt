@@ -43,5 +43,31 @@ data class ClubAiProfileEntity(
     val wageStrictness: Int = 50, // 工资纪律（越严越不愿破工资结构）
 
     @ColumnInfo(name = "patience_with_manager")
-    val patienceWithManager: Int = 50 // 对主帅的耐心（影响解雇概率）
+    val patienceWithManager: Int = 50, // 对主帅的耐心（影响解雇概率）
+
+    // ===== T18 AI 俱乐部画像扩展字段（V0.2 05 §二 + §三） =====
+
+    /** 俱乐部性格标识（T18，6 种性格枚举名，详见 [com.greendynasty.football.ai.profile.model.ClubPersonality]） */
+    @ColumnInfo(name = "club_personality")
+    val clubPersonality: String? = null, // CONSERVATIVE / AGGRESSIVE / PRAGMATIC / IDEALIST / MONEY_DRIVEN / YOUTH_ADVOCATE
+
+    /** 长期目标标识（T18，6 种长期目标枚举名，详见 [com.greendynasty.football.ai.profile.model.LongTermGoal]） */
+    @ColumnInfo(name = "long_term_goal")
+    val longTermGoal: String? = null, // WIN_TITLE / AVOID_RELEGATION / DEVELOP_YOUTH / FINANCIAL_BALANCE / BUILD_BRAND / TOP_HALF
+
+    /** 长期目标赛季数（T18，3-5 年） */
+    @ColumnInfo(name = "target_seasons")
+    val targetSeasons: Int = 3, // 默认 3 年
+
+    /** 球员类型偏好标识（T18，5 种球员原型，详见 [com.greendynasty.football.ai.profile.model.PlayerArchetype]） */
+    @ColumnInfo(name = "player_archetype")
+    val playerArchetype: String? = null, // STAR / WONDERKID / SQUAD / VETERAN / BARGAIN
+
+    /** 转会预算分配偏好（T18，0-100，越高越倾向把预算投入转会市场而非青训） */
+    @ColumnInfo(name = "transfer_budget_ratio")
+    val transferBudgetRatio: Int = 50,
+
+    /** 青训投入偏好（T18，0-100，越高越倾向投资青训学院） */
+    @ColumnInfo(name = "youth_investment_ratio")
+    val youthInvestmentRatio: Int = 50
 )
