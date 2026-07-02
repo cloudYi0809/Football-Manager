@@ -1,5 +1,3 @@
-下面这版可以直接复制到 GitHub。依据你当前公开仓库信息：`Football-Manager` 是公开仓库，主语言 Kotlin，项目根名是 `GreenDynasty2002`，目前还没有仓库描述、topic 和 release；项目技术栈包含 Kotlin、Jetpack Compose、Room、SQLite、Kotlin Serialization。([GitHub][1])
-
 **GitHub 个人简介 / Bio：**
 
 独立开发者，专注 Android、Kotlin 与模拟经营游戏。正在开发《绿茵王朝：2002》，探索足球经理、长程存档、比赛引擎与世界演化模拟。
