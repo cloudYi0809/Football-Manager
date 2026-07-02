@@ -1,5 +1,6 @@
 package com.greendynasty.football.prospect.path
 
+import com.greendynasty.football.butterfly.ButterflyEventService
 import com.greendynasty.football.data.api.DatabaseManager
 import com.greendynasty.football.data.save.entity.ButterflyEventEntity
 import com.greendynasty.football.prospect.data.ProspectPathEventEntity
@@ -20,6 +21,12 @@ import java.util.UUID
  * - 不做完整因果链传播（T20/T21 实现）
  * - 单次触发只生成 1 个蝴蝶事件（避免级联）
  *
+ * T20 集成（任务要求 7）：
+ * - 若 [butterflyEventService] 非空，优先调用 T20 ButterflyEventService.recordEvent() 记录事件
+ * - T20 服务会做规则校验 + 影响节点生成 + 偏差度量更新
+ * - 若 T20 服务返回 null（规则校验未通过）或抛异常，回退到直接写 DAO（兼容旧路径）
+ * - 若 [butterflyEventService] 为空，保持原有直接写 DAO 行为
+ *
  * 触发场景：
  * 1. 玩家提前签约历史新星（早于 defaultBreakthroughYear 或非默认一线队）
  * 2. AI 俱乐部抢签历史新星
@@ -27,10 +34,12 @@ import java.util.UUID
  *
  * @param databaseManager 三库管理入口
  * @param config 历史新星池配置
+ * @param butterflyEventService T20 蝴蝶事件服务（可选，传入则启用 T20 集成）
  */
 class ButterflyEffectMarker(
     private val databaseManager: DatabaseManager,
-    private val config: ProspectConfig = ProspectConfig.DEFAULT
+    private val config: ProspectConfig = ProspectConfig.DEFAULT,
+    private val butterflyEventService: ButterflyEventService? = null
 ) {
 
     /**
@@ -76,28 +85,49 @@ class ButterflyEffectMarker(
         val state = stateDao.get(saveId, prospectId)
         if (state?.butterflyTriggered == 1) return@withContext state.butterflyEventId
 
-        // 3. 创建 ButterflyEventEntity（V1 简化：pending 状态，不传播）
-        val eventId = UUID.randomUUID().toString()
-        val event = ButterflyEventEntity(
-            eventId = eventId,
-            saveId = saveUuid,
-            triggerType = triggerType,
-            sourcePlayerId = playerId,
-            sourceClubId = sourceClubId,
-            expectedClubId = expectedClubId,
-            triggerDate = currentDate.toString(),
-            importance = config.butterflyDefaultImportance,
-            impactBudget = config.butterflyDefaultImpactBudget,
-            maxDepth = config.butterflyDefaultMaxDepth,
-            status = "pending",
-            summary = summary
-        )
-        databaseManager.butterflyEventDao().insert(event)
+        // 3. T20 集成：优先调用 ButterflyEventService.recordEvent() 记录事件
+        // T15 importance 为 1-5 制，T20 为 0-100 制，需 ×20 换算
+        val scaledImportance = (config.butterflyDefaultImportance * 20).coerceIn(0, 100)
+        var eventId: String? = null
+        if (butterflyEventService != null) {
+            eventId = runCatching {
+                butterflyEventService.recordEvent(
+                    saveUuid = saveUuid,
+                    triggerType = triggerType,
+                    sourcePlayerId = playerId,
+                    sourceClubId = sourceClubId,
+                    expectedClubId = expectedClubId,
+                    currentDate = currentDate,
+                    importance = scaledImportance,
+                    summary = summary
+                )
+            }.getOrNull()
+        }
 
-        // 4. 更新星状态：butterfly_triggered = 1, butterfly_event_id = eventId
+        // 4. 若 T20 服务未启用或规则校验未通过，回退到直接写 DAO（兼容旧路径）
+        if (eventId == null) {
+            eventId = UUID.randomUUID().toString()
+            val event = ButterflyEventEntity(
+                eventId = eventId,
+                saveId = saveUuid,
+                triggerType = triggerType,
+                sourcePlayerId = playerId,
+                sourceClubId = sourceClubId,
+                expectedClubId = expectedClubId,
+                triggerDate = currentDate.toString(),
+                importance = config.butterflyDefaultImportance,
+                impactBudget = config.butterflyDefaultImpactBudget,
+                maxDepth = config.butterflyDefaultMaxDepth,
+                status = "pending",
+                summary = summary
+            )
+            databaseManager.butterflyEventDao().insert(event)
+        }
+
+        // 5. 更新星状态：butterfly_triggered = 1, butterfly_event_id = eventId
         stateDao.markButterflyTriggered(saveId, prospectId, eventId)
 
-        // 5. 写入路径事件 BUTTERFLY_TRIGGERED
+        // 6. 写入路径事件 BUTTERFLY_TRIGGERED
         databaseManager.prospectPathEventDao().insert(
             ProspectPathEventEntity(
                 saveId = saveId,

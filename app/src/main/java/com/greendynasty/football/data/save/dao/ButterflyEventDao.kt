@@ -42,8 +42,32 @@ interface ButterflyEventDao {
     @Query("SELECT * FROM butterfly_event WHERE save_id = :saveId ORDER BY trigger_date DESC")
     suspend fun getAll(saveId: String): List<ButterflyEventEntity>
 
+    @Query("SELECT * FROM butterfly_event WHERE save_id = :saveId ORDER BY trigger_date DESC")
+    fun observeAll(saveId: String): kotlinx.coroutines.flow.Flow<List<ButterflyEventEntity>>
+
+    @Query("SELECT * FROM butterfly_event WHERE save_id = :saveId ORDER BY trigger_date DESC LIMIT :limit")
+    fun observeRecent(saveId: String, limit: Int): kotlinx.coroutines.flow.Flow<List<ButterflyEventEntity>>
+
     @Query("UPDATE butterfly_event SET status = :status WHERE event_id = :eventId")
     suspend fun updateStatus(eventId: String, status: String)
+
+    // ========== T20 预算 / 偏差度量 / 去重查询 ==========
+
+    /** 当前存档事件总数（用于偏差度量与预算控制）。 */
+    @Query("SELECT COUNT(*) FROM butterfly_event WHERE save_id = :saveId")
+    suspend fun countBySaveId(saveId: String): Int
+
+    /** 当前存档指定状态事件数（用于预算：completed 表示本赛季已生成）。 */
+    @Query("SELECT COUNT(*) FROM butterfly_event WHERE save_id = :saveId AND status = :status")
+    suspend fun countBySaveIdAndStatus(saveId: String, status: String): Int
+
+    /** 按源球员查询事件（用于去重：每球员最多 1 个蝴蝶事件）。 */
+    @Query("SELECT * FROM butterfly_event WHERE save_id = :saveId AND source_player_id = :playerId LIMIT 1")
+    suspend fun getBySourcePlayer(saveId: String, playerId: Int): ButterflyEventEntity?
+
+    /** 当前存档事件总重要度（用于偏差度量）。 */
+    @Query("SELECT COALESCE(SUM(importance), 0) FROM butterfly_event WHERE save_id = :saveId")
+    suspend fun sumImportanceBySaveId(saveId: String): Int
 
     // ========== 影响节点 ==========
 
@@ -67,6 +91,14 @@ interface ButterflyEventDao {
 
     @Query("UPDATE butterfly_impact_node SET status = :status, result_summary = :summary WHERE node_id = :nodeId")
     suspend fun updateNodeStatus(nodeId: String, status: String, summary: String?)
+
+    /** 当前存档影响节点总数（用于偏差度量与预算控制）。 */
+    @Query("SELECT COUNT(*) FROM butterfly_impact_node WHERE event_id IN (SELECT event_id FROM butterfly_event WHERE save_id = :saveId)")
+    suspend fun countNodesBySaveId(saveId: String): Int
+
+    /** 当前事件影响节点数（用于单事件预算控制）。 */
+    @Query("SELECT COUNT(*) FROM butterfly_impact_node WHERE event_id = :eventId")
+    suspend fun countNodesByEventId(eventId: String): Int
 
     @Query("SELECT COUNT(*) FROM butterfly_event WHERE save_id = :saveId AND status = 'pending'")
     suspend fun countPending(saveId: String): Int
