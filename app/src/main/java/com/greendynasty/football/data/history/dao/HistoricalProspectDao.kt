@@ -27,6 +27,10 @@ interface HistoricalProspectDao {
     @Query("SELECT * FROM historical_prospect_pool WHERE discoverable_from <= :date AND hidden_until_discovered = 1")
     fun getDiscoverableProspects(date: String): Flow<List<HistoricalProspectPoolEntity>>
 
+    // T15 历史新星池：按可发现日期同步查询（一次性返回，供 ProspectPoolManager 激活使用）
+    @Query("SELECT * FROM historical_prospect_pool WHERE discoverable_from <= :date ORDER BY discoverable_from")
+    suspend fun getAllProspectsSync(date: String): List<HistoricalProspectPoolEntity>
+
     // 按地区代码筛选新星
     @Query("SELECT * FROM historical_prospect_pool WHERE initial_region_code = :regionCode")
     fun getProspectsByRegion(regionCode: String): Flow<List<HistoricalProspectPoolEntity>>

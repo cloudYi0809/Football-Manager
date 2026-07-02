@@ -56,6 +56,10 @@ import com.greendynasty.football.growth.model.MonthlyTrainingRecordDao
 import com.greendynasty.football.growth.model.MonthlyTrainingRecordEntity
 import com.greendynasty.football.injury.model.MedicalFacilityDao
 import com.greendynasty.football.injury.model.MedicalFacilityEntity
+import com.greendynasty.football.prospect.data.ProspectPathEventDao
+import com.greendynasty.football.prospect.data.ProspectPathEventEntity
+import com.greendynasty.football.prospect.data.ProspectStateDao
+import com.greendynasty.football.prospect.data.ProspectStateEntity
 import com.greendynasty.football.scouting.data.SaveScoutEventEntity
 import com.greendynasty.football.scouting.data.SaveScoutHiredEntity
 import com.greendynasty.football.scouting.data.SaveScoutRegionKnowledgeEntity
@@ -129,9 +133,12 @@ import java.io.File
         SaveScoutRegionKnowledgeEntity::class,
         SaveScoutTaskEntity::class,
         SaveScoutReportEntity::class,
-        SaveScoutEventEntity::class
+        SaveScoutEventEntity::class,
+        // T15 历史新星池：2 张表（新星存档状态 / 路径事件）
+        ProspectStateEntity::class,
+        ProspectPathEventEntity::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class SaveDatabase : RoomDatabase() {
@@ -174,6 +181,9 @@ abstract class SaveDatabase : RoomDatabase() {
     abstract fun saveScoutTaskDao(): SaveScoutTaskDao
     abstract fun saveScoutReportDao(): SaveScoutReportDao
     abstract fun saveScoutEventDao(): SaveScoutEventDao
+    // T15 历史新星池 DAO
+    abstract fun prospectStateDao(): ProspectStateDao
+    abstract fun prospectPathEventDao(): ProspectPathEventDao
 
     companion object {
         /**

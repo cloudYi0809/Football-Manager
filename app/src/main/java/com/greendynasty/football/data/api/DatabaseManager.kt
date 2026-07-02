@@ -43,6 +43,8 @@ import com.greendynasty.football.growth.model.GrowthSnapshotDao
 import com.greendynasty.football.growth.model.MonthlyPlayingTimeDao
 import com.greendynasty.football.growth.model.MonthlyTrainingRecordDao
 import com.greendynasty.football.injury.model.MedicalFacilityDao
+import com.greendynasty.football.prospect.data.ProspectPathEventDao
+import com.greendynasty.football.prospect.data.ProspectStateDao
 import com.greendynasty.football.scouting.data.SaveScoutEventDao
 import com.greendynasty.football.scouting.data.SaveScoutHiredDao
 import com.greendynasty.football.scouting.data.SaveScoutRegionKnowledgeDao
@@ -307,6 +309,8 @@ class DatabaseManager private constructor(private val context: Context) {
             SaveScoutTaskDao::class.java -> db.saveScoutTaskDao() as T
             SaveScoutReportDao::class.java -> db.saveScoutReportDao() as T
             SaveScoutEventDao::class.java -> db.saveScoutEventDao() as T
+            ProspectStateDao::class.java -> db.prospectStateDao() as T
+            ProspectPathEventDao::class.java -> db.prospectPathEventDao() as T
             else -> error("未知的 save DAO 类型: ${daoClass.name}")
         }
     }
@@ -382,6 +386,9 @@ class DatabaseManager private constructor(private val context: Context) {
     fun saveScoutTaskDao() = getSaveDatabase().saveScoutTaskDao()
     fun saveScoutReportDao() = getSaveDatabase().saveScoutReportDao()
     fun saveScoutEventDao() = getSaveDatabase().saveScoutEventDao()
+    // T15 历史新星池 DAO 便捷访问
+    fun prospectStateDao() = getSaveDatabase().prospectStateDao()
+    fun prospectPathEventDao() = getSaveDatabase().prospectPathEventDao()
 
     /** cache DAO 便捷访问 */
     fun playerSearchIndexDao() = getCacheDatabase().playerSearchIndexDao()
