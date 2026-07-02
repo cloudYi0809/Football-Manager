@@ -43,6 +43,11 @@ import com.greendynasty.football.growth.model.GrowthSnapshotDao
 import com.greendynasty.football.growth.model.MonthlyPlayingTimeDao
 import com.greendynasty.football.growth.model.MonthlyTrainingRecordDao
 import com.greendynasty.football.injury.model.MedicalFacilityDao
+import com.greendynasty.football.scouting.data.SaveScoutEventDao
+import com.greendynasty.football.scouting.data.SaveScoutHiredDao
+import com.greendynasty.football.scouting.data.SaveScoutRegionKnowledgeDao
+import com.greendynasty.football.scouting.data.SaveScoutReportDao
+import com.greendynasty.football.scouting.data.SaveScoutTaskDao
 import com.greendynasty.football.transfer.contract.model.ContractReminderDao
 import com.greendynasty.football.transfer.contract.model.ContractRenewalDao
 import com.greendynasty.football.transfer.negotiation.model.ContractTermsDao
@@ -297,6 +302,11 @@ class DatabaseManager private constructor(private val context: Context) {
             ContractTermsDao::class.java -> db.contractTermsDao() as T
             ContractRenewalDao::class.java -> db.contractRenewalDao() as T
             ContractReminderDao::class.java -> db.contractReminderDao() as T
+            SaveScoutHiredDao::class.java -> db.saveScoutHiredDao() as T
+            SaveScoutRegionKnowledgeDao::class.java -> db.saveScoutRegionKnowledgeDao() as T
+            SaveScoutTaskDao::class.java -> db.saveScoutTaskDao() as T
+            SaveScoutReportDao::class.java -> db.saveScoutReportDao() as T
+            SaveScoutEventDao::class.java -> db.saveScoutEventDao() as T
             else -> error("未知的 save DAO 类型: ${daoClass.name}")
         }
     }
@@ -366,6 +376,12 @@ class DatabaseManager private constructor(private val context: Context) {
     // T12 合同续约 DAO 便捷访问
     fun contractRenewalDao() = getSaveDatabase().contractRenewalDao()
     fun contractReminderDao() = getSaveDatabase().contractReminderDao()
+    // T14 球探任务 DAO 便捷访问
+    fun saveScoutHiredDao() = getSaveDatabase().saveScoutHiredDao()
+    fun saveScoutRegionKnowledgeDao() = getSaveDatabase().saveScoutRegionKnowledgeDao()
+    fun saveScoutTaskDao() = getSaveDatabase().saveScoutTaskDao()
+    fun saveScoutReportDao() = getSaveDatabase().saveScoutReportDao()
+    fun saveScoutEventDao() = getSaveDatabase().saveScoutEventDao()
 
     /** cache DAO 便捷访问 */
     fun playerSearchIndexDao() = getCacheDatabase().playerSearchIndexDao()
