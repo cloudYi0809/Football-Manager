@@ -56,6 +56,10 @@ import com.greendynasty.football.growth.model.MonthlyTrainingRecordDao
 import com.greendynasty.football.growth.model.MonthlyTrainingRecordEntity
 import com.greendynasty.football.injury.model.MedicalFacilityDao
 import com.greendynasty.football.injury.model.MedicalFacilityEntity
+import com.greendynasty.football.transfer.contract.model.ContractReminderEntity
+import com.greendynasty.football.transfer.contract.model.ContractRenewalDao
+import com.greendynasty.football.transfer.contract.model.ContractRenewalEntity
+import com.greendynasty.football.transfer.contract.model.ContractReminderDao
 import com.greendynasty.football.transfer.negotiation.model.ContractTermsDao
 import com.greendynasty.football.transfer.negotiation.model.ContractTermsEntity
 import com.greendynasty.football.transfer.negotiation.model.NegotiationSessionDao
@@ -106,9 +110,12 @@ import java.io.File
         // T11 报价谈判：3 张表（谈判会话 / 报价轮次 / 合同条款）
         NegotiationSessionEntity::class,
         OfferRoundEntity::class,
-        ContractTermsEntity::class
+        ContractTermsEntity::class,
+        // T12 合同续约：2 张表（续约报价 / 到期提醒）
+        ContractRenewalEntity::class,
+        ContractReminderEntity::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class SaveDatabase : RoomDatabase() {
@@ -142,6 +149,9 @@ abstract class SaveDatabase : RoomDatabase() {
     abstract fun negotiationSessionDao(): NegotiationSessionDao
     abstract fun offerRoundDao(): OfferRoundDao
     abstract fun contractTermsDao(): ContractTermsDao
+    // T12 合同续约 DAO
+    abstract fun contractRenewalDao(): ContractRenewalDao
+    abstract fun contractReminderDao(): ContractReminderDao
 
     companion object {
         /**
