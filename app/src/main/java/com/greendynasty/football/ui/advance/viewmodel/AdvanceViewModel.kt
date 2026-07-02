@@ -38,8 +38,8 @@ import com.greendynasty.football.simulation.stub.AiSchedulerStub
 import com.greendynasty.football.simulation.stub.BoardServiceStub
 import com.greendynasty.football.simulation.stub.ButterflyEventServiceStub
 import com.greendynasty.football.simulation.stub.EconomyServiceStub
-import com.greendynasty.football.simulation.stub.PlayerGrowthServiceStub
 import com.greendynasty.football.simulation.stub.SeasonArchiverStub
+import com.greendynasty.football.growth.repository.GrowthMonthlyService
 import com.greendynasty.football.simulation.weekly.WeeklyTaskScheduler
 import com.greendynasty.football.ui.advance.state.AdvanceUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -78,7 +78,7 @@ class AdvanceViewModel(
     // stub 服务（T08+ 接入后替换）
     private val aiSchedulerStub = AiSchedulerStub()
     private val butterflyServiceStub = ButterflyEventServiceStub()
-    private val growthServiceStub = PlayerGrowthServiceStub()
+    private val growthService = GrowthMonthlyService(databaseManager) // T09 已接入
     private val economyServiceStub = EconomyServiceStub()
     private val boardServiceStub = BoardServiceStub()
     private val seasonArchiverStub = SeasonArchiverStub()
@@ -117,7 +117,7 @@ class AdvanceViewModel(
     )
     private val weeklyScheduler = WeeklyTaskScheduler(databaseManager, config)
     private val monthlyScheduler = MonthlyTaskScheduler(
-        databaseManager, config, economyServiceStub, growthServiceStub, boardServiceStub
+        databaseManager, config, economyServiceStub, growthService, boardServiceStub
     )
     private val seasonScheduler = SeasonTaskScheduler(
         databaseManager, checkpointManager, config, seasonArchiverStub

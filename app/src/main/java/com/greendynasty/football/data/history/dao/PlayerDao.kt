@@ -55,4 +55,12 @@ interface PlayerDao {
     // 球员总数
     @Query("SELECT COUNT(*) FROM player")
     suspend fun count(): Int
+
+    // T09 成长月结：批量查询球员基础信息（避免 N+1）
+    @Query("SELECT * FROM player WHERE player_id IN (:playerIds)")
+    suspend fun getPlayersByIds(playerIds: List<Int>): List<PlayerEntity>
+
+    // T09 成长月结：批量查询球员最新赛季属性（避免 N+1）
+    @Query("SELECT * FROM player_attributes WHERE player_id IN (:playerIds) ORDER BY season_id DESC")
+    suspend fun getLatestAttributesBatch(playerIds: List<Int>): List<PlayerAttributesEntity>
 }

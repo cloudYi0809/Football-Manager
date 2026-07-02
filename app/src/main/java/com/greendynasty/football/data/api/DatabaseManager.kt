@@ -38,6 +38,10 @@ import com.greendynasty.football.data.save.dao.SaveWorldStateDao
 import com.greendynasty.football.data.save.dao.ScoutAssignmentDao
 import com.greendynasty.football.data.save.dao.ScoutReportDao
 import com.greendynasty.football.data.save.dao.SeasonArchiveDao
+import com.greendynasty.football.growth.model.GrowthEventDao
+import com.greendynasty.football.growth.model.GrowthSnapshotDao
+import com.greendynasty.football.growth.model.MonthlyPlayingTimeDao
+import com.greendynasty.football.growth.model.MonthlyTrainingRecordDao
 import com.greendynasty.football.injury.model.MedicalFacilityDao
 import java.io.File
 
@@ -279,6 +283,10 @@ class DatabaseManager private constructor(private val context: Context) {
             SaveMatchDao::class.java -> db.saveMatchDao() as T
             SaveLeagueTableDao::class.java -> db.saveLeagueTableDao() as T
             MedicalFacilityDao::class.java -> db.medicalFacilityDao() as T
+            GrowthSnapshotDao::class.java -> db.growthSnapshotDao() as T
+            MonthlyTrainingRecordDao::class.java -> db.monthlyTrainingRecordDao() as T
+            MonthlyPlayingTimeDao::class.java -> db.monthlyPlayingTimeDao() as T
+            GrowthEventDao::class.java -> db.growthEventDao() as T
             else -> error("未知的 save DAO 类型: ${daoClass.name}")
         }
     }
@@ -336,6 +344,11 @@ class DatabaseManager private constructor(private val context: Context) {
     fun saveMatchDao() = getSaveDatabase().saveMatchDao()
     fun saveLeagueTableDao() = getSaveDatabase().saveLeagueTableDao()
     fun medicalFacilityDao() = getSaveDatabase().medicalFacilityDao()
+    // T09 成长月结 DAO 便捷访问
+    fun growthSnapshotDao() = getSaveDatabase().growthSnapshotDao()
+    fun monthlyTrainingRecordDao() = getSaveDatabase().monthlyTrainingRecordDao()
+    fun monthlyPlayingTimeDao() = getSaveDatabase().monthlyPlayingTimeDao()
+    fun growthEventDao() = getSaveDatabase().growthEventDao()
 
     /** cache DAO 便捷访问 */
     fun playerSearchIndexDao() = getCacheDatabase().playerSearchIndexDao()

@@ -2,6 +2,7 @@ package com.greendynasty.football.simulation.monthly
 
 import android.util.Log
 import com.greendynasty.football.data.api.DatabaseManager
+import com.greendynasty.football.growth.repository.GrowthMonthlyService
 import com.greendynasty.football.simulation.api.AdvanceContext
 import com.greendynasty.football.simulation.api.AdvanceEvent
 import com.greendynasty.football.simulation.api.AdvanceEventType
@@ -9,7 +10,6 @@ import com.greendynasty.football.simulation.api.EventPriority
 import com.greendynasty.football.simulation.config.ProgressionConfig
 import com.greendynasty.football.simulation.stub.BoardServiceStub
 import com.greendynasty.football.simulation.stub.EconomyServiceStub
-import com.greendynasty.football.simulation.stub.PlayerGrowthServiceStub
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -30,19 +30,19 @@ import kotlinx.coroutines.withContext
  * - 财政：基于存档俱乐部状态计算，工资支出 = wageBudget，门票/赞助收入用 stub
  * - 投入扣除：V1 简化，因 SaveClubStateEntity 无 youthLevel/medicalLevel/dataLevel 字段，暂不扣除
  * - 董事会月评：调用 BoardServiceStub
- * - 球员成长月结：调用 PlayerGrowthServiceStub
+ * - 球员成长月结：调用 GrowthMonthlyService（T09 已接入，10 因子公式 + 异常保护 + 事件触发）
  *
  * @param databaseManager 三库管理入口
  * @param config 推进配置
  * @param economyService 经济服务 stub（T17）
- * @param growthService 成长服务 stub（T09）
+ * @param growthService 成长服务（T09 真实实现，替换原 PlayerGrowthServiceStub）
  * @param boardService 董事会服务 stub（T22）
  */
 class MonthlyTaskScheduler(
     private val databaseManager: DatabaseManager,
     private val config: ProgressionConfig,
     private val economyService: EconomyServiceStub,
-    private val growthService: PlayerGrowthServiceStub,
+    private val growthService: GrowthMonthlyService,
     private val boardService: BoardServiceStub
 ) {
 

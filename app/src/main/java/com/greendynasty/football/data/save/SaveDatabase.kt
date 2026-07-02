@@ -46,6 +46,14 @@ import com.greendynasty.football.data.save.entity.SaveWorldStateEntity
 import com.greendynasty.football.data.save.entity.ScoutAssignmentEntity
 import com.greendynasty.football.data.save.entity.ScoutReportEntity
 import com.greendynasty.football.data.save.entity.SeasonArchiveEntity
+import com.greendynasty.football.growth.model.GrowthEventDao
+import com.greendynasty.football.growth.model.GrowthEventEntity
+import com.greendynasty.football.growth.model.GrowthSnapshotDao
+import com.greendynasty.football.growth.model.GrowthSnapshotEntity
+import com.greendynasty.football.growth.model.MonthlyPlayingTimeDao
+import com.greendynasty.football.growth.model.MonthlyPlayingTimeEntity
+import com.greendynasty.football.growth.model.MonthlyTrainingRecordDao
+import com.greendynasty.football.growth.model.MonthlyTrainingRecordEntity
 import com.greendynasty.football.injury.model.MedicalFacilityDao
 import com.greendynasty.football.injury.model.MedicalFacilityEntity
 import java.io.File
@@ -83,9 +91,14 @@ import java.io.File
         PerfLogEntity::class,
         SaveCupTieEntity::class,
         SaveScheduleStateEntity::class,
-        MedicalFacilityEntity::class
+        MedicalFacilityEntity::class,
+        // T09 成长月结：4 张表
+        GrowthSnapshotEntity::class,
+        MonthlyTrainingRecordEntity::class,
+        MonthlyPlayingTimeEntity::class,
+        GrowthEventEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class SaveDatabase : RoomDatabase() {
@@ -110,6 +123,11 @@ abstract class SaveDatabase : RoomDatabase() {
     abstract fun saveCupTieDao(): SaveCupTieDao
     abstract fun saveScheduleStateDao(): SaveScheduleStateDao
     abstract fun medicalFacilityDao(): MedicalFacilityDao
+    // T09 成长月结 DAO
+    abstract fun growthSnapshotDao(): GrowthSnapshotDao
+    abstract fun monthlyTrainingRecordDao(): MonthlyTrainingRecordDao
+    abstract fun monthlyPlayingTimeDao(): MonthlyPlayingTimeDao
+    abstract fun growthEventDao(): GrowthEventDao
 
     companion object {
         /**
