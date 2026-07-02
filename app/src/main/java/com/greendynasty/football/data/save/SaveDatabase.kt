@@ -62,6 +62,16 @@ import com.greendynasty.football.data.save.entity.ScoutReportEntity
 import com.greendynasty.football.data.save.entity.SeasonArchiveEntity
 import com.greendynasty.football.divergence.archive.DivergenceArchiveDao
 import com.greendynasty.football.divergence.archive.DivergenceArchiveEntity
+import com.greendynasty.football.dressingroom.model.DressingRoomAtmosphereDao
+import com.greendynasty.football.dressingroom.model.DressingRoomAtmosphereEntity
+import com.greendynasty.football.dressingroom.model.DressingRoomLeaderDao
+import com.greendynasty.football.dressingroom.model.DressingRoomLeaderEntity
+import com.greendynasty.football.dressingroom.model.PlayerChemistryDao
+import com.greendynasty.football.dressingroom.model.PlayerChemistryEntity
+import com.greendynasty.football.dressingroom.model.PlayerEmotionEventDao
+import com.greendynasty.football.dressingroom.model.PlayerEmotionEventEntity
+import com.greendynasty.football.dressingroom.model.PlayerMoraleDao
+import com.greendynasty.football.dressingroom.model.PlayerMoraleEntity
 import com.greendynasty.football.growth.model.GrowthEventDao
 import com.greendynasty.football.growth.model.GrowthEventEntity
 import com.greendynasty.football.growth.model.GrowthSnapshotDao
@@ -176,9 +186,15 @@ import java.io.File
         BoardSatisfactionEntity::class,
         BoardConfidenceEntity::class,
         BudgetRequestEntity::class,
-        BoardEventEntity::class
+        BoardEventEntity::class,
+        // T23 更衣室模块：5 张表（球员士气 / 球员化学反应 / 更衣室氛围 / 更衣室领袖 / 球员情绪事件）
+        PlayerMoraleEntity::class,
+        PlayerChemistryEntity::class,
+        DressingRoomAtmosphereEntity::class,
+        DressingRoomLeaderEntity::class,
+        PlayerEmotionEventEntity::class
     ],
-    version = 12, // T22 升版：新增董事会模块 6 张表
+    version = 13, // T23 升版：新增更衣室模块 5 张表
     exportSchema = false
 )
 abstract class SaveDatabase : RoomDatabase() {
@@ -240,6 +256,12 @@ abstract class SaveDatabase : RoomDatabase() {
     abstract fun boardConfidenceDao(): BoardConfidenceDao
     abstract fun budgetRequestDao(): BudgetRequestDao
     abstract fun boardEventDao(): BoardEventDao
+    // T23 更衣室模块 DAO
+    abstract fun playerMoraleDao(): PlayerMoraleDao
+    abstract fun playerChemistryDao(): PlayerChemistryDao
+    abstract fun dressingRoomAtmosphereDao(): DressingRoomAtmosphereDao
+    abstract fun dressingRoomLeaderDao(): DressingRoomLeaderDao
+    abstract fun playerEmotionEventDao(): PlayerEmotionEventDao
 
     companion object {
         /**

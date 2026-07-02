@@ -46,6 +46,11 @@ import com.greendynasty.football.data.save.dao.ScoutAssignmentDao
 import com.greendynasty.football.data.save.dao.ScoutReportDao
 import com.greendynasty.football.data.save.dao.SeasonArchiveDao
 import com.greendynasty.football.divergence.archive.DivergenceArchiveDao
+import com.greendynasty.football.dressingroom.model.DressingRoomAtmosphereDao
+import com.greendynasty.football.dressingroom.model.DressingRoomLeaderDao
+import com.greendynasty.football.dressingroom.model.PlayerChemistryDao
+import com.greendynasty.football.dressingroom.model.PlayerEmotionEventDao
+import com.greendynasty.football.dressingroom.model.PlayerMoraleDao
 import com.greendynasty.football.growth.model.GrowthEventDao
 import com.greendynasty.football.growth.model.GrowthSnapshotDao
 import com.greendynasty.football.growth.model.MonthlyPlayingTimeDao
@@ -335,6 +340,11 @@ class DatabaseManager private constructor(private val context: Context) {
             BoardConfidenceDao::class.java -> db.boardConfidenceDao() as T
             BudgetRequestDao::class.java -> db.budgetRequestDao() as T
             BoardEventDao::class.java -> db.boardEventDao() as T
+            PlayerMoraleDao::class.java -> db.playerMoraleDao() as T
+            PlayerChemistryDao::class.java -> db.playerChemistryDao() as T
+            DressingRoomAtmosphereDao::class.java -> db.dressingRoomAtmosphereDao() as T
+            DressingRoomLeaderDao::class.java -> db.dressingRoomLeaderDao() as T
+            PlayerEmotionEventDao::class.java -> db.playerEmotionEventDao() as T
             else -> error("未知的 save DAO 类型: ${daoClass.name}")
         }
     }
@@ -429,6 +439,12 @@ class DatabaseManager private constructor(private val context: Context) {
     fun boardConfidenceDao() = getSaveDatabase().boardConfidenceDao()
     fun budgetRequestDao() = getSaveDatabase().budgetRequestDao()
     fun boardEventDao() = getSaveDatabase().boardEventDao()
+    // T23 更衣室模块 DAO 便捷访问
+    fun playerMoraleDao() = getSaveDatabase().playerMoraleDao()
+    fun playerChemistryDao() = getSaveDatabase().playerChemistryDao()
+    fun dressingRoomAtmosphereDao() = getSaveDatabase().dressingRoomAtmosphereDao()
+    fun dressingRoomLeaderDao() = getSaveDatabase().dressingRoomLeaderDao()
+    fun playerEmotionEventDao() = getSaveDatabase().playerEmotionEventDao()
 
     /** cache DAO 便捷访问 */
     fun playerSearchIndexDao() = getCacheDatabase().playerSearchIndexDao()
