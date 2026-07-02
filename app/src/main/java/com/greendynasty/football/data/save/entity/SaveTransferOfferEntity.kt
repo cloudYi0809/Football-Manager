@@ -52,5 +52,24 @@ data class SaveTransferOfferEntity(
     val createdDate: String, // 报价创建日期
 
     @ColumnInfo(name = "expires_date")
-    val expiresDate: String? // 报价截止日期
+    val expiresDate: String?, // 报价截止日期
+
+    // —— T11 报价谈判扩展字段（带默认值，兼容 T10 既有调用）——
+    @ColumnInfo(name = "negotiation_type")
+    val negotiationType: String = "PERMANENT", // OfferType.name：PERMANENT/LOAN/LOAN_WITH_BUYOUT/FREE_SIGNING/PRE_CONTRACT
+
+    @ColumnInfo(name = "signing_bonus")
+    val signingBonus: Int = 0, // 签字费
+
+    @ColumnInfo(name = "agent_commission")
+    val agentCommission: Int = 0, // 经纪人佣金
+
+    @ColumnInfo(name = "role_promise")
+    val rolePromise: String? = null, // RolePromise.name：KEY_PLAYER/STARTER/ROTATION/BACKUP/ACADEMY_DEV
+
+    @ColumnInfo(name = "current_round")
+    val currentRound: Int = 0, // 当前谈判轮次
+
+    @ColumnInfo(name = "psychological_price")
+    val psychologicalPrice: Int = 0 // 缓存卖方心理价位（避免每轮重算）
 )

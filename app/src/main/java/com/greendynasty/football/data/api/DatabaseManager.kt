@@ -43,6 +43,9 @@ import com.greendynasty.football.growth.model.GrowthSnapshotDao
 import com.greendynasty.football.growth.model.MonthlyPlayingTimeDao
 import com.greendynasty.football.growth.model.MonthlyTrainingRecordDao
 import com.greendynasty.football.injury.model.MedicalFacilityDao
+import com.greendynasty.football.transfer.negotiation.model.ContractTermsDao
+import com.greendynasty.football.transfer.negotiation.model.NegotiationSessionDao
+import com.greendynasty.football.transfer.negotiation.model.OfferRoundDao
 import java.io.File
 
 /**
@@ -287,6 +290,9 @@ class DatabaseManager private constructor(private val context: Context) {
             MonthlyTrainingRecordDao::class.java -> db.monthlyTrainingRecordDao() as T
             MonthlyPlayingTimeDao::class.java -> db.monthlyPlayingTimeDao() as T
             GrowthEventDao::class.java -> db.growthEventDao() as T
+            NegotiationSessionDao::class.java -> db.negotiationSessionDao() as T
+            OfferRoundDao::class.java -> db.offerRoundDao() as T
+            ContractTermsDao::class.java -> db.contractTermsDao() as T
             else -> error("未知的 save DAO 类型: ${daoClass.name}")
         }
     }
@@ -349,6 +355,10 @@ class DatabaseManager private constructor(private val context: Context) {
     fun monthlyTrainingRecordDao() = getSaveDatabase().monthlyTrainingRecordDao()
     fun monthlyPlayingTimeDao() = getSaveDatabase().monthlyPlayingTimeDao()
     fun growthEventDao() = getSaveDatabase().growthEventDao()
+    // T11 报价谈判 DAO 便捷访问
+    fun negotiationSessionDao() = getSaveDatabase().negotiationSessionDao()
+    fun offerRoundDao() = getSaveDatabase().offerRoundDao()
+    fun contractTermsDao() = getSaveDatabase().contractTermsDao()
 
     /** cache DAO 便捷访问 */
     fun playerSearchIndexDao() = getCacheDatabase().playerSearchIndexDao()
