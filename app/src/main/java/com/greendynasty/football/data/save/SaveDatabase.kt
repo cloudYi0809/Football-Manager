@@ -48,6 +48,8 @@ import com.greendynasty.football.data.save.entity.SaveWorldStateEntity
 import com.greendynasty.football.data.save.entity.ScoutAssignmentEntity
 import com.greendynasty.football.data.save.entity.ScoutReportEntity
 import com.greendynasty.football.data.save.entity.SeasonArchiveEntity
+import com.greendynasty.football.divergence.archive.DivergenceArchiveDao
+import com.greendynasty.football.divergence.archive.DivergenceArchiveEntity
 import com.greendynasty.football.growth.model.GrowthEventDao
 import com.greendynasty.football.growth.model.GrowthEventEntity
 import com.greendynasty.football.growth.model.GrowthSnapshotDao
@@ -153,9 +155,11 @@ import java.io.File
         YouthEventEntity::class,
         YouthAcademyInvestmentEntity::class,
         // T19 赛季归档：压缩比赛事件表
-        CompressedMatchEntity::class
+        CompressedMatchEntity::class,
+        // T21 历史分歧归档表
+        DivergenceArchiveEntity::class
     ],
-    version = 10, // T19 升版：新增 compressed_match 表（赛季归档压缩比赛事件）
+    version = 11, // T21 升版：新增 divergence_archive 表（历史分歧归档）
     exportSchema = false
 )
 abstract class SaveDatabase : RoomDatabase() {
@@ -208,6 +212,8 @@ abstract class SaveDatabase : RoomDatabase() {
     abstract fun youthAcademyInvestmentDao(): YouthAcademyInvestmentDao
     // T19 赛季归档 DAO
     abstract fun compressedMatchDao(): CompressedMatchDao
+    // T21 历史分歧归档 DAO
+    abstract fun divergenceArchiveDao(): DivergenceArchiveDao
 
     companion object {
         /**

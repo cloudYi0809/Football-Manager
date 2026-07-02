@@ -39,6 +39,7 @@ import com.greendynasty.football.data.save.dao.SaveWorldStateDao
 import com.greendynasty.football.data.save.dao.ScoutAssignmentDao
 import com.greendynasty.football.data.save.dao.ScoutReportDao
 import com.greendynasty.football.data.save.dao.SeasonArchiveDao
+import com.greendynasty.football.divergence.archive.DivergenceArchiveDao
 import com.greendynasty.football.growth.model.GrowthEventDao
 import com.greendynasty.football.growth.model.GrowthSnapshotDao
 import com.greendynasty.football.growth.model.MonthlyPlayingTimeDao
@@ -321,6 +322,7 @@ class DatabaseManager private constructor(private val context: Context) {
             YouthEventDao::class.java -> db.youthEventDao() as T
             YouthAcademyInvestmentDao::class.java -> db.youthAcademyInvestmentDao() as T
             CompressedMatchDao::class.java -> db.compressedMatchDao() as T
+            DivergenceArchiveDao::class.java -> db.divergenceArchiveDao() as T
             else -> error("未知的 save DAO 类型: ${daoClass.name}")
         }
     }
@@ -406,6 +408,8 @@ class DatabaseManager private constructor(private val context: Context) {
     fun youthAcademyInvestmentDao() = getSaveDatabase().youthAcademyInvestmentDao()
     // T19 赛季归档 DAO 便捷访问
     fun compressedMatchDao() = getSaveDatabase().compressedMatchDao()
+    // T21 历史分歧归档 DAO 便捷访问
+    fun divergenceArchiveDao() = getSaveDatabase().divergenceArchiveDao()
 
     /** cache DAO 便捷访问 */
     fun playerSearchIndexDao() = getCacheDatabase().playerSearchIndexDao()
