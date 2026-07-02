@@ -55,4 +55,8 @@ interface ScoutReportDao {
 
     @Query("SELECT COUNT(*) FROM scout_report WHERE save_id = :saveId")
     suspend fun count(saveId: Int): Int
+
+    // T19 赛季归档：清理超出保留期的球探报告
+    @Query("DELETE FROM scout_report WHERE save_id = :saveId AND report_date < :beforeDate")
+    suspend fun deleteBefore(saveId: Int, beforeDate: String): Int
 }

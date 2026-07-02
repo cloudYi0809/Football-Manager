@@ -52,4 +52,11 @@ interface SaveTransferOfferDao {
 
     @Query("SELECT COUNT(*) FROM save_transfer_offer WHERE save_id = :saveId AND status = 'pending'")
     suspend fun countPending(saveId: Int): Int
+
+    // T19 赛季归档：清理已完成/已拒绝且超出保留期的报价
+    @Query(
+        "DELETE FROM save_transfer_offer WHERE save_id = :saveId " +
+            "AND status IN ('completed', 'rejected') AND created_date < :beforeDate"
+    )
+    suspend fun deleteCompletedAndExpired(saveId: Int, beforeDate: String): Int
 }

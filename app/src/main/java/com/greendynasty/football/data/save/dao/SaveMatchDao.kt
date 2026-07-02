@@ -77,4 +77,8 @@ interface SaveMatchDao {
 
     @Query("SELECT COUNT(*) FROM save_match WHERE save_id = :saveId")
     suspend fun count(saveId: Int): Int
+
+    // T19 赛季归档：压缩比赛事件后清空详细统计字段以回收空间
+    @Query("UPDATE save_match SET match_stats_json = NULL WHERE save_id = :saveId AND season_id = :seasonId")
+    suspend fun clearMatchStatsBySeason(saveId: Int, seasonId: Int)
 }

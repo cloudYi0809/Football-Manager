@@ -141,13 +141,16 @@ class BoardServiceStub {
 /**
  * 赛季归档服务 stub（T19）
  * 赛季结束时归档：比赛记录/积分榜/球员统计/奖项
+ *
+ * 声明为 open class，允许 T19 真实实现继承并覆盖 [archiveSeason]，
+ * 由 [com.greendynasty.football.simulation.season.SeasonTaskScheduler] 注入替换。
  */
-class SeasonArchiverStub {
+open class SeasonArchiverStub {
 
     /**
      * 归档赛季数据
      */
-    suspend fun archiveSeason(ctx: AdvanceContext) {
+    open suspend fun archiveSeason(ctx: AdvanceContext) {
         // TODO: T19 接入后实现赛季归档（写入 season_archive 表）
     }
 }

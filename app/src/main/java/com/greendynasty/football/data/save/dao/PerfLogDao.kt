@@ -51,7 +51,7 @@ interface PerfLogDao {
     suspend fun getMaxDbSize(saveId: String): Double?
 
     @Query("DELETE FROM perf_log WHERE save_id = :saveId AND log_date < :beforeDate")
-    suspend fun deleteOldLogs(saveId: String, beforeDate: String)
+    suspend fun deleteOldLogs(saveId: String, beforeDate: String): Int
 
     @Query("SELECT COUNT(*) FROM perf_log WHERE save_id = :saveId")
     suspend fun count(saveId: String): Int

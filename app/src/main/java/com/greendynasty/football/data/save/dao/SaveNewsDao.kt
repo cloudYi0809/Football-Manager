@@ -60,5 +60,5 @@ interface SaveNewsDao {
     suspend fun countUnread(saveId: Int): Int
 
     @Query("DELETE FROM save_news WHERE save_id = :saveId AND is_read = 1 AND news_date < :beforeDate")
-    suspend fun deleteOldRead(saveId: Int, beforeDate: String)
+    suspend fun deleteOldRead(saveId: Int, beforeDate: String): Int
 }

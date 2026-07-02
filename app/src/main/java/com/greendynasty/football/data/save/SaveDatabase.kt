@@ -8,6 +8,7 @@ import androidx.room.RoomDatabase.JournalMode
 import com.greendynasty.football.data.save.dao.ButterflyEventDao
 import com.greendynasty.football.data.save.dao.CheckpointDao
 import com.greendynasty.football.data.save.dao.ClubAiProfileDao
+import com.greendynasty.football.data.save.dao.CompressedMatchDao
 import com.greendynasty.football.data.save.dao.EconomyIndexDao
 import com.greendynasty.football.data.save.dao.PerfLogDao
 import com.greendynasty.football.data.save.dao.SaveClubStateDao
@@ -28,6 +29,7 @@ import com.greendynasty.football.data.save.entity.AiDecisionLogEntity
 import com.greendynasty.football.data.save.entity.ButterflyEventEntity
 import com.greendynasty.football.data.save.entity.ButterflyImpactNodeEntity
 import com.greendynasty.football.data.save.entity.CheckpointEntity
+import com.greendynasty.football.data.save.entity.CompressedMatchEntity
 import com.greendynasty.football.data.save.entity.ClubAiProfileEntity
 import com.greendynasty.football.data.save.entity.EconomyIndexEntity
 import com.greendynasty.football.data.save.entity.LeagueEconomyProfileEntity
@@ -149,9 +151,11 @@ import java.io.File
         YouthAcademyStateEntity::class,
         YouthPlayerEntity::class,
         YouthEventEntity::class,
-        YouthAcademyInvestmentEntity::class
+        YouthAcademyInvestmentEntity::class,
+        // T19 赛季归档：压缩比赛事件表
+        CompressedMatchEntity::class
     ],
-    version = 9, // T18 升版：club_ai_profile 表新增 club_personality / long_term_goal / target_seasons / player_archetype / transfer_budget_ratio / youth_investment_ratio 字段
+    version = 10, // T19 升版：新增 compressed_match 表（赛季归档压缩比赛事件）
     exportSchema = false
 )
 abstract class SaveDatabase : RoomDatabase() {
@@ -202,6 +206,8 @@ abstract class SaveDatabase : RoomDatabase() {
     abstract fun youthPlayerDao(): YouthPlayerDao
     abstract fun youthEventDao(): YouthEventDao
     abstract fun youthAcademyInvestmentDao(): YouthAcademyInvestmentDao
+    // T19 赛季归档 DAO
+    abstract fun compressedMatchDao(): CompressedMatchDao
 
     companion object {
         /**
