@@ -48,6 +48,32 @@ interface PlayerSearchIndexDao {
     @Query("SELECT * FROM player_search_index ORDER BY current_ca DESC LIMIT :limit")
     fun getTopPlayers(limit: Int): List<PlayerSearchIndexEntity>
 
+    // T10 转会搜索：复合索引查询（位置/CA/年龄/身价 + 分页）
+    @Query(
+        """
+        SELECT * FROM player_search_index
+        WHERE (:positionsEmpty = 1 OR position IN (:positions))
+          AND (:caMin IS NULL OR current_ca >= :caMin)
+          AND (:caMax IS NULL OR current_ca <= :caMax)
+          AND (:ageMin IS NULL OR age >= :ageMin)
+          AND (:ageMax IS NULL OR age <= :ageMax)
+          AND (:maxValue IS NULL OR market_value <= :maxValue)
+        ORDER BY current_ca DESC
+        LIMIT :limit OFFSET :offset
+        """
+    )
+    fun searchMulti(
+        positions: List<String>,
+        positionsEmpty: Int,
+        caMin: Int?,
+        caMax: Int?,
+        ageMin: Int?,
+        ageMax: Int?,
+        maxValue: Int?,
+        limit: Int,
+        offset: Int
+    ): List<PlayerSearchIndexEntity>
+
     @Query("SELECT COUNT(*) FROM player_search_index")
     fun count(): Int
 
