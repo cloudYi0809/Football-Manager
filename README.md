@@ -282,6 +282,4 @@ Football-Manager
 当前暂未指定开源许可证。
 在正式发布前，请根据项目开放程度选择合适的许可证。
 
-你可以先把 **仓库 About 简介** 填到 GitHub 右侧 About 里，然后把最后一段完整内容保存为根目录 `README.md`。
-
 [1]: https://github.com/cloudYi0809/Football-Manager "GitHub - cloudYi0809/Football-Manager · GitHub"
