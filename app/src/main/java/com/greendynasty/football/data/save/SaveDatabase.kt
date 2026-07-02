@@ -60,17 +60,25 @@ import com.greendynasty.football.prospect.data.ProspectPathEventDao
 import com.greendynasty.football.prospect.data.ProspectPathEventEntity
 import com.greendynasty.football.prospect.data.ProspectStateDao
 import com.greendynasty.football.prospect.data.ProspectStateEntity
+import com.greendynasty.football.scouting.data.SaveScoutEventDao
 import com.greendynasty.football.scouting.data.SaveScoutEventEntity
 import com.greendynasty.football.scouting.data.SaveScoutHiredEntity
 import com.greendynasty.football.scouting.data.SaveScoutRegionKnowledgeEntity
 import com.greendynasty.football.scouting.data.SaveScoutReportEntity
 import com.greendynasty.football.scouting.data.SaveScoutTaskEntity
-import com.greendynasty.football.scouting.data.SaveScoutEventDao
 import com.greendynasty.football.scouting.data.SaveScoutHiredDao
 import com.greendynasty.football.scouting.data.SaveScoutRegionKnowledgeDao
 import com.greendynasty.football.scouting.data.SaveScoutReportDao
 import com.greendynasty.football.scouting.data.SaveScoutTaskDao
 import com.greendynasty.football.transfer.contract.model.ContractReminderEntity
+import com.greendynasty.football.youth.data.YouthAcademyInvestmentDao
+import com.greendynasty.football.youth.data.YouthAcademyStateDao
+import com.greendynasty.football.youth.data.YouthEventDao
+import com.greendynasty.football.youth.data.YouthPlayerDao
+import com.greendynasty.football.youth.model.YouthAcademyInvestmentEntity
+import com.greendynasty.football.youth.model.YouthAcademyStateEntity
+import com.greendynasty.football.youth.model.YouthEventEntity
+import com.greendynasty.football.youth.model.YouthPlayerEntity
 import com.greendynasty.football.transfer.contract.model.ContractRenewalDao
 import com.greendynasty.football.transfer.contract.model.ContractRenewalEntity
 import com.greendynasty.football.transfer.contract.model.ContractReminderDao
@@ -136,9 +144,14 @@ import java.io.File
         SaveScoutEventEntity::class,
         // T15 历史新星池：2 张表（新星存档状态 / 路径事件）
         ProspectStateEntity::class,
-        ProspectPathEventEntity::class
+        ProspectPathEventEntity::class,
+        // T16 青训学院：3 张表（学院存档状态 / 青训球员 / 青训事件 / 投资记录）
+        YouthAcademyStateEntity::class,
+        YouthPlayerEntity::class,
+        YouthEventEntity::class,
+        YouthAcademyInvestmentEntity::class
     ],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 abstract class SaveDatabase : RoomDatabase() {
@@ -184,6 +197,11 @@ abstract class SaveDatabase : RoomDatabase() {
     // T15 历史新星池 DAO
     abstract fun prospectStateDao(): ProspectStateDao
     abstract fun prospectPathEventDao(): ProspectPathEventDao
+    // T16 青训学院 DAO
+    abstract fun youthAcademyStateDao(): YouthAcademyStateDao
+    abstract fun youthPlayerDao(): YouthPlayerDao
+    abstract fun youthEventDao(): YouthEventDao
+    abstract fun youthAcademyInvestmentDao(): YouthAcademyInvestmentDao
 
     companion object {
         /**

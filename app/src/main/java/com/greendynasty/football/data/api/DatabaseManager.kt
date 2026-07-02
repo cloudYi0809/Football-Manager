@@ -55,6 +55,10 @@ import com.greendynasty.football.transfer.contract.model.ContractRenewalDao
 import com.greendynasty.football.transfer.negotiation.model.ContractTermsDao
 import com.greendynasty.football.transfer.negotiation.model.NegotiationSessionDao
 import com.greendynasty.football.transfer.negotiation.model.OfferRoundDao
+import com.greendynasty.football.youth.data.YouthAcademyInvestmentDao
+import com.greendynasty.football.youth.data.YouthAcademyStateDao
+import com.greendynasty.football.youth.data.YouthEventDao
+import com.greendynasty.football.youth.data.YouthPlayerDao
 import java.io.File
 
 /**
@@ -311,6 +315,10 @@ class DatabaseManager private constructor(private val context: Context) {
             SaveScoutEventDao::class.java -> db.saveScoutEventDao() as T
             ProspectStateDao::class.java -> db.prospectStateDao() as T
             ProspectPathEventDao::class.java -> db.prospectPathEventDao() as T
+            YouthAcademyStateDao::class.java -> db.youthAcademyStateDao() as T
+            YouthPlayerDao::class.java -> db.youthPlayerDao() as T
+            YouthEventDao::class.java -> db.youthEventDao() as T
+            YouthAcademyInvestmentDao::class.java -> db.youthAcademyInvestmentDao() as T
             else -> error("未知的 save DAO 类型: ${daoClass.name}")
         }
     }
@@ -389,6 +397,11 @@ class DatabaseManager private constructor(private val context: Context) {
     // T15 历史新星池 DAO 便捷访问
     fun prospectStateDao() = getSaveDatabase().prospectStateDao()
     fun prospectPathEventDao() = getSaveDatabase().prospectPathEventDao()
+    // T16 青训学院 DAO 便捷访问
+    fun youthAcademyStateDao() = getSaveDatabase().youthAcademyStateDao()
+    fun youthPlayerDao() = getSaveDatabase().youthPlayerDao()
+    fun youthEventDao() = getSaveDatabase().youthEventDao()
+    fun youthAcademyInvestmentDao() = getSaveDatabase().youthAcademyInvestmentDao()
 
     /** cache DAO 便捷访问 */
     fun playerSearchIndexDao() = getCacheDatabase().playerSearchIndexDao()
